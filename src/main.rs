@@ -1,114 +1,151 @@
-use futures_util::TryStreamExt;
 use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Method, Request, Response, Server, StatusCode};
+use hyper::{Client, Body, Method, Request, Response, Server, StatusCode};
 use serde_json::json;
+use std::str::from_utf8;
+use hyper_tls::HttpsConnector;
 
+const URL: &str = "";
 
 /// This is our service handler. It receives a Request, routes on its
 /// path, and returns a Future of a Response.
 async fn echo(req: Request<Body>) -> Result<Response<Body>, Box<dyn std::error::Error + Send + Sync>> {
-let card_body = json!({
-    "@type": "MessageCard",
-    "@context": "https://schema.org/extensions",
-    "summary": "Test card",
-    "themeColor": "0078D7",
-    "title": "--title--",
-    "sections": [
-        {
-            "activityTitle": "--stitle--",
-            "activitySubtitle": "--date--",
-            "activityImage": "--icon--",
-            "facts": [
-                {
-                    "name": "Custer:",
-                    "value": "--clustername--"
-                },
-                {
-                    "name": "Replica set:",
-                    "value": "--repset--"
-                },
-                {
-                    "name": "Server:",
-                    "value": "--handp--"
-                },
-                {
-                    "name": "Metric:",
-                    "value": "--stitle--"
-                },
-                {
-                    "name": "Metric value:",
-                    "value": "--value--"
-                },
-                {
-                    "name": "Type:",
-                    "value": "--type--"
-                },
-                {
-                    "name": "Event:",
-                    "value": "--event--"
-                }
-    
-            ],
-            "text": "--MESSAGE--"
-        }
-    ],
-    "potentialAction": [      
-        {
-            "@type": "OpenUri",
-            "name": "Check the stats",
-            "targets": [
-                {
-                    "os": "default",
-                    "uri": "--url--",
-                    "url": "--url--"
-                }
-            ]
-        }
-    ]
-});
+    let mut card_body = json!({
+        "@type": "MessageCard",
+        "@context": "https://schema.org/extensions",
+        "summary": "Test card",
+        "themeColor": "0078D7",
+        "title": "",
+        "sections": [
+            {
+                "activityTitle": "",
+                "activitySubtitle": "",
+                "activityImage": "",
+                "facts": [
+                    {
+                        "name": "Replica set:",
+                        "value": ""
+                    },
+                    {
+                        "name": "Server:",
+                        "value": ""
+                    },
+                    {
+                        "name": "Type:",
+                        "value": ""
+                    },
+        
+                ]
+            }
+        ]
+    });
 
     match (req.method(), req.uri().path()) {
         // Serve some instructions at /
         (&Method::GET, "/") => Ok(Response::new(Body::from(
-            "Try POSTing data to /echo such as: `curl localhost:8000/echo -XPOST -d 'hello world'`",
+            "Paths:\n\t/echo: Returns json back\n\t/card: Displays teams card\n\t/stdout: Write posted json to stdout",
         ))),
 
         // Return default card
-        (&Method::GET, "/default") => Ok(Response::new(Body::from(
+        (&Method::GET, "/card") => Ok(Response::new(Body::from(
             card_body.to_string()
         ))),
 
-        // Simply echo the body back to the client.
-        (&Method::POST, "/echo") => Ok(Response::new(req.into_body())),
+        // Return posted body
+        (&Method::POST, "/echo") => {
+            let whole_body = hyper::body::to_bytes(req.into_body()).await?;
+            let whole_body_vec = whole_body.iter().cloned().collect::<Vec<u8>>();
+            let value = from_utf8(&whole_body_vec).to_owned()?;
+            let value: serde_json::Value = serde_json::from_str(value)?;
+            Ok(Response::new(Body::from(value.to_string())))
+        }
 
         // Log to stdout posted body
         (&Method::POST, "/stdout") => {
             let whole_body = hyper::body::to_bytes(req.into_body()).await?;
-            println!("{:?}",whole_body);
-            Ok(Response::new(Body::from("Written to stdout")))
+            let whole_body_vec = whole_body.iter().cloned().collect::<Vec<u8>>();
+            let value = from_utf8(&whole_body_vec).to_owned()?;
+            let value: serde_json::Value = serde_json::from_str(value)?;
+            println!("Received json: {}",&value.to_string());
+            Ok(Response::new(Body::from("json accepted and written to stdout")))
         }
 
-        (&Method::POST, "/echo/uppercase") => {
-            let chunk_stream = req.into_body().map_ok(|chunk| {
-                chunk
-                    .iter()
-                    .map(|byte| byte.to_ascii_uppercase())
-                    .collect::<Vec<u8>>()
-            });
-            Ok(Response::new(Body::wrap_stream(chunk_stream)))
-        }
-
-        // Reverse the entire body before sending back to the client.
-        //
-        // Since we don't know the end yet, we can't simply stream
-        // the chunks as they arrive as we did with the above uppercase endpoint.
-        // So here we do `.await` on the future, waiting on concatenating the full body,
-        // then afterwards the content can be reversed. Only then can we return a `Response`.
-        (&Method::POST, "/echo/reversed") => {
+        // echo transformed card with received variables
+        (&Method::POST, "/echo_alert") => {
             let whole_body = hyper::body::to_bytes(req.into_body()).await?;
+            let whole_body_vec = whole_body.iter().cloned().collect::<Vec<u8>>();
+            let value = from_utf8(&whole_body_vec).to_owned()?;
+            let value: serde_json::Value = serde_json::from_str(value)?;
+            println!("Received json: {}",&value.to_string());
+            
+            // Transform card
+            card_body["title"] = value["eventTypeName"].clone();
+            card_body["sections"][0]["activitySubtitle"] = value["created"].clone();
+            card_body["sections"][0]["activityTitle"] = value["eventTypeName"].clone();
+            card_body["sections"][0]["facts"][0]["value"] = value["replicaSetName"].clone();
+            card_body["sections"][0]["facts"][1]["value"] = value["hostnameAndPort"].clone();
+            card_body["sections"][0]["facts"][2]["value"] = value["status"].clone();
 
-            let reversed_body = whole_body.iter().rev().cloned().collect::<Vec<u8>>();
-            Ok(Response::new(Body::from(reversed_body)))
+            Ok(Response::new(Body::from(card_body.to_string())))
+        }
+
+        // Alert transformed card with received variables
+        (&Method::POST, "/alert") => {
+            let whole_body = hyper::body::to_bytes(req.into_body()).await?;
+            let whole_body_vec = whole_body.iter().cloned().collect::<Vec<u8>>();
+            let value = from_utf8(&whole_body_vec).to_owned()?;
+            let value: serde_json::Value = serde_json::from_str(value)?;
+
+            println!("Received json post to /alert: {}", value.to_string());
+            
+            // Set status
+            if value["status"].is_string() {
+                if value["status"] == "OPEN" {
+                    card_body["title"] = serde_json::to_value("New Alert Triggered")?;
+                    card_body["sections"][0]["activityImage"] = serde_json::to_value("https://upload.wikimedia.org/wikipedia/commons/9/92/Error_%2889607%29_-_The_Noun_Project.svg")?;
+                } else if value["status"] == "CLOSED" {
+                    card_body["title"] = serde_json::to_value("Alert Closed")?;
+                    card_body["sections"][0]["activityImage"] = serde_json::to_value("https://upload.wikimedia.org/wikipedia/commons/1/15/Mood-very-good_%28CoreUI_Icons_v1.0.0%29.svg")?;
+                } else if value["status"] == "INFORMATIONAL" {
+                    card_body["title"] = serde_json::to_value("Informational Alert")?;
+                    card_body["sections"][0]["activityImage"] = serde_json::to_value("https://upload.wikimedia.org/wikipedia/commons/9/9b/Good_Article_%28Black%29.svg")?;
+                }
+            };
+
+            // Set title based on eventTypeName
+            if value["eventTypeName"].is_string() { 
+                if value["eventTypeName"] == "PRIMARY_ELECTED" {
+                    card_body["sections"][0]["activityTitle"] = serde_json::to_value("Replica set elected a new primary")?;
+                } else {
+                    card_body["sections"][0]["activityTitle"] = value["eventTypeName"].clone();
+                }
+            };
+
+            // Transform card facts
+            if value["created"].is_string() { card_body["sections"][0]["activitySubtitle"] = value["created"].clone() };
+            if value["replicaSetName"].is_string() { card_body["sections"][0]["facts"][0]["value"] = value["replicaSetName"].clone() };
+            if value["hostnameAndPort"].is_string() { card_body["sections"][0]["facts"][1]["value"] = value["hostnameAndPort"].clone() };
+            if value["typeName"].is_string() { card_body["sections"][0]["facts"][2]["value"] = value["typeName"].clone() };
+
+            let https = HttpsConnector::new();
+            let client = Client::builder().build::<_, hyper::Body>(https);
+            let req = Request::builder()
+                .method("POST")
+                .uri(URL)
+                .header("Content-Type","application/json")
+                .body(Body::from(card_body.to_string()))
+                .expect("request builder");
+
+            let future = match client.request(req).await {
+                Ok(_) => {
+                    println!("Successful post to {}", URL);
+                    "success"
+                },
+                Err(e) => {
+                    println!("Caught error posting: {}", e);
+                    "error"
+                }
+            };
+            Ok(Response::new(Body::from(future)))
         }
 
         // Return the 404 Not Found for other routes.
@@ -122,7 +159,7 @@ let card_body = json!({
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let addr = ([127, 0, 0, 1], 8000).into();
+    let addr = ([0, 0, 0, 0], 8000).into();
 
     let service = make_service_fn(|_| async { Ok::<_, hyper::Error>(service_fn(echo)) });
 
@@ -130,7 +167,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     println!("Listening on http://{}", addr);
 
-    server.await?;
+    if let Err(e) = server.await {
+        eprintln!("server error: {}", e);
+    }
 
     Ok(())
 }
