@@ -4,6 +4,8 @@ use serde_json::json;
 use std::str::from_utf8;
 use hyper_tls::HttpsConnector;
 
+mod transform;
+
 const URL: &str = "";
 
 /// This is our service handler. It receives a Request, routes on its
@@ -70,21 +72,43 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, Box<dyn std::error::
         }
 
         // echo transformed card with received variables
-        (&Method::POST, "/echo_alert") => {
+        (&Method::POST, "/testalert") => {
             let whole_body = hyper::body::to_bytes(req.into_body()).await?;
             let whole_body_vec = whole_body.iter().cloned().collect::<Vec<u8>>();
             let value = from_utf8(&whole_body_vec).to_owned()?;
             let value: serde_json::Value = serde_json::from_str(value)?;
-            println!("Received json: {}",&value.to_string());
+            println!("Received json post to /testalert: {}", value.to_string());
             
-            // Transform card
-            card_body["title"] = value["eventTypeName"].clone();
-            card_body["sections"][0]["activitySubtitle"] = value["created"].clone();
-            card_body["sections"][0]["activityTitle"] = value["eventTypeName"].clone();
-            card_body["sections"][0]["facts"][0]["value"] = value["replicaSetName"].clone();
-            card_body["sections"][0]["facts"][1]["value"] = value["hostnameAndPort"].clone();
-            card_body["sections"][0]["facts"][2]["value"] = value["status"].clone();
+            // Set status
+            if value["status"].is_string() {
+                if value["status"] == "OPEN" {
+                    card_body["title"] = serde_json::to_value("New Alert Triggered")?;
+                    card_body["themeColor"] = serde_json::to_value("d7000d")?;
+                    card_body["sections"][0]["activityImage"] = serde_json::to_value("https://upload.wikimedia.org/wikipedia/commons/9/92/Error_%2889607%29_-_The_Noun_Project.svg")?;
+                } else if value["status"] == "CLOSED" {
+                    card_body["title"] = serde_json::to_value("Alert Closed")?;
+                    card_body["themeColor"] = serde_json::to_value("00d75f")?;
+                    card_body["sections"][0]["activityImage"] = serde_json::to_value("https://upload.wikimedia.org/wikipedia/commons/1/15/Mood-very-good_%28CoreUI_Icons_v1.0.0%29.svg")?;
+                } else if value["status"] == "INFORMATIONAL" {
+                    card_body["title"] = serde_json::to_value("Informational Alert")?;
+                    card_body["themeColor"] = serde_json::to_value("0078d7")?;
+                    card_body["sections"][0]["activityImage"] = serde_json::to_value("https://upload.wikimedia.org/wikipedia/commons/9/9b/Good_Article_%28Black%29.svg")?;
+                }
+            };
 
+            // Set title based on eventTypeName
+            if value["eventTypeName"].is_string() { 
+                match transform::get_message_string(&value["eventTypeName"].as_str().expect("Logically, we should not have hit this error")) {
+                    Some(string) => card_body["sections"][0]["activityTitle"] = serde_json::to_value(string)?,
+                    None => card_body["sections"][0]["activityTitle"] = value["eventTypeName"].clone()
+                }
+            };
+
+            // Transform card facts
+            if value["created"].is_string() { card_body["sections"][0]["activitySubtitle"] = value["created"].clone() };
+            if value["replicaSetName"].is_string() { card_body["sections"][0]["facts"][0]["value"] = value["replicaSetName"].clone() };
+            if value["hostnameAndPort"].is_string() { card_body["sections"][0]["facts"][1]["value"] = value["hostnameAndPort"].clone() };
+            if value["typeName"].is_string() { card_body["sections"][0]["facts"][2]["value"] = value["typeName"].clone() };
             Ok(Response::new(Body::from(card_body.to_string())))
         }
 
@@ -94,7 +118,6 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, Box<dyn std::error::
             let whole_body_vec = whole_body.iter().cloned().collect::<Vec<u8>>();
             let value = from_utf8(&whole_body_vec).to_owned()?;
             let value: serde_json::Value = serde_json::from_str(value)?;
-
             println!("Received json post to /alert: {}", value.to_string());
             
             // Set status
@@ -113,10 +136,9 @@ async fn echo(req: Request<Body>) -> Result<Response<Body>, Box<dyn std::error::
 
             // Set title based on eventTypeName
             if value["eventTypeName"].is_string() { 
-                if value["eventTypeName"] == "PRIMARY_ELECTED" {
-                    card_body["sections"][0]["activityTitle"] = serde_json::to_value("Replica set elected a new primary")?;
-                } else {
-                    card_body["sections"][0]["activityTitle"] = value["eventTypeName"].clone();
+                match transform::get_message_string(&value["eventTypeName"].as_str().expect("Logically, we should not have hit this error")) {
+                    Some(string) => card_body["sections"][0]["activityTitle"] = serde_json::to_value(string)?,
+                    None => card_body["sections"][0]["activityTitle"] = value["eventTypeName"].clone()
                 }
             };
 

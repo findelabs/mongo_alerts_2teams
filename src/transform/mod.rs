@@ -1,127 +1,132 @@
-"AUTOMATION_AGENT_DOWN" => "=Automation is down"
-"AUTOMATION_AGENT_UP" => "=Automation is up"
-"BACKUP_AGENT_CONF_CALL_FAILURE" => "=Backup has too many conf call failures"
-"BACKUP_AGENT_DOWN" => "=Backup is down"
-"BACKUP_AGENT_UP" => "=Backup is up"
-"BACKUP_AGENT_VERSION_BEHIND" => "=Backup does not have the latest version"
-"BACKUP_AGENT_VERSION_CURRENT" => "=Backup has the latest version"
-"MONITORING_AGENT_DOWN" => "=Monitoring is down"
-"MONITORING_AGENT_UP" => "=Monitoring is up"
-"MONITORING_AGENT_VERSION_BEHIND" => "=Monitoring does not have the latest version"
-"MONITORING_AGENT_VERSION_CURRENT" => "=Monitoring has the latest version"
-"AUTOMATION_CONFIG_PUBLISHED_AUDIT" => "=Deployment configuration published"
-"BAD_CLUSTERSHOTS" => "=Backup has possibly inconsistent cluster snapshots"
-"CLUSTER_BLACKLIST_UPDATED_AUDIT" => "=Excluded namespaces were modified for cluster"
-"CLUSTER_CHECKKPOINT_UPDATED_AUDIT" => "=Checkpoint interval updated for cluster"
-"CLUSTER_CREDENTIAL_UPDATED_AUDIT" => "=Backup authentication credentials updated for cluster"
-"CLUSTER_SNAPSHOT_SCHEDULE_UPDATED_AUDIT" => "=Snapshot schedule updated for cluster"
-"CLUSTER_STATE_CHANGED_AUDIT" => "=Cluster backup state is now"
-"CLUSTER_STORAGE_ENGINE_UPDATED_AUDIT" => "=Cluster storage engine has been updated"
-"CLUSTERSHOT_DELETED_AUDIT" => "=Cluster snapshot has been deleted"
-"CLUSTERSHOT_EXPIRY_UPDATED_AUDIT" => "=Clustershot expiry has been updated"
-"CONSISTENT_BACKUP_CONFIGURATION" => "=Backup configuration is consistent"
-"GOOD_CLUSTERSHOT" => "=Backup has a good clustershot"
-"INCONSISTENT_BACKUP_CONFIGURATION" => "=Inconsistent backup configuration has been detected"
-"INITIAL_SYNC_FINISHED_AUDIT" => "=Backup initial sync finished"
-"INITIAL_SYNC_STARTED_AUDIT" => "=Backup initial sync started"
-"OPLOG_BEHIND" => "=Backup oplog is behind"
-"OPLOG_CURRENT" => "=Backup oplog is current"
-"RESTORE_REQUESTED_AUDIT" => "=A restore has been requested"
-"RESYNC_PERFORMED" => "=Backup has been resynced"
-"RESYNC_REQUIRED" => "=Backup requires a resync"
-"RS_BLACKLIST_UPDATED_AUDIT" => "=Excluded namespaces were modified for replica set"
-"RS_CREDENTIAL_UPDATED_AUDIT" => "=Backup authentication credentials updated for replica set"
-"RS_ROTATE_MASTER_KEY_AUDIT" => "=A master key rotation has been requested for a replica set"
-"RS_SNAPSHOT_SCHEDULE_UPDATED_AUDIT" => "=Snapshot schedule updated for replica set"
-"RS_STATE_CHANGED_AUDIT" => "=Replica set backup state is now"
-"RS_STORAGE_ENGINE_UPDATED_AUDIT" => "=Replica set storage engine has been updated"
-"SNAPSHOT_DELETED_AUDIT" => "=Snapshot has been deleted"
-"SNAPSHOT_EXPIRY_UPDATED_AUDIT" => "=Snapshot expiry has been updated"
-"SYNC_PENDING_AUDIT" => "=Backup sync is pending"
-"SYNC_REQUIRED_AUDIT" => "=Backup sync has been initiated"
-"BI_CONNECTOR_DOWN" => "=BI Connector is down"
-"BI_CONNECTOR_UP" => "=BI Connector is up Project"
-"CLUSTER_MONGOS_IS_MISSING" => "=Cluster is missing an active mongos"
-"CLUSTER_MONGOS_IS_PRESENT" => "=Cluster has an active mongos"
-"SHARD_ADDED" => "=Shard added"
-"SHARD_REMOVED" => "=Shard removed"
-"DATA_EXPLORER" => "=User performed a Data Explorer read-only operation"
-"DATA_EXPLORER_CRUD" => "=User performed a Data Explorer CRUD operation"
-"ADD_HOST_AUDIT" => "=Host added"
-"ADD_HOST_TO_REPLICA_SET_AUDIT" => "=Host added to replica set"
-"ATTEMPT_KILLOP_AUDIT" => "=Attempted to kill operation"
-"ATTEMPT_KILLSESSION_AUDIT" => "=Attempted to kill session"
-"DB_PROFILER_DISABLE_AUDIT" => "=Database profiling disabled"
-"DB_PROFILER_ENABLE_AUDIT" => "=Database profiling enabled"
-"DELETE_HOST_AUDIT" => "=Host removed"
-"DISABLE_HOST_AUDIT" => "=Host disabled"
-"HIDE_AND_DISABLE_HOST_AUDIT" => "=Host disabled and hidden"
-"HIDE_HOST_AUDIT" => "=Host hidden"
-"HOST_DOWN" => "=Host is down"
-"HOST_DOWNGRADED" => "=Host has been downgraded"
-"HOST_IP_CHANGED_AUDIT" => "=Host IP address changed"
-"HOST_NOW_PRIMARY" => "=Host is now primary"
-"HOST_NOW_SECONDARY" => "=Host is now secondary"
-"HOST_NOW_STANDALONE" => "=Host is now a standalone"
-"HOST_RECOVERED" => "=Host has recovered"
-"HOST_RECOVERING" => "=Host is recovering"
-"HOST_RESTARTED" => "=Host has restarted"
-"HOST_ROLLBACK" => "=Host experienced a rollback"
-"HOST_SSL_CERTIFICATE_CURRENT" => "=Host’s SSL certificate is current"
-"HOST_SSL_CERTIFICATE_STALE" => "=Host’s SSL certificate will expire within 30 days"
-"HOST_UP" => "=Host is up"
-"HOST_UPGRADED" => "=Host has been upgraded"
-"INSIDE_METRIC_THRESHOLD" => "=Inside metric threshold"
-"NEW_HOST" => "=Host is new"
-"OUTSIDE_METRIC_THRESHOLD" => "=Outside metric threshold"
-"PAUSE_HOST_AUDIT" => "=Host paused"
-"REMOVE_HOST_FROM_REPLICA_SET_AUDIT" => "=Host removed from replica set"
-"RESUME_HOST_AUDIT" => "=Host resumed"
-"UNDELETE_HOST_AUDIT" => "=Host undeleted"
-"VERSION_BEHIND" => "=Host does not have the latest version"
-"VERSION_CHANGED" => "=Host version changed"
-"VERSION_CURRENT" => "=Host has the latest version Project"
-"ALL_ORG_USERS_HAVE_MFA" => "=Organization users have two-factor authentication enabled"
-"ORG_API_KEY_ADDED" => "=API key has been added"
-"ORG_API_KEY_DELETED" => "=API key has been deleted"
-"ORG_EMPLOYEE_ACCESS_RESTRICTED" => "=MongoDB Production Support Employees restricted from accessing Atlas backend infrastructure for any Atlas cluster in this organization (You may grant a 24 hour bypass to the access restriction at the Atlas cluster level)"
-"ORG_EMPLOYEE_ACCESS_UNRESTRICTED" => "=MongoDB Production Support Employees unrestricted from accessing Atlas backend infrastructure for any Atlas cluster in this organization"
-"ORG_PUBLIC_API_WHITELIST_NOT_REQUIRED" => "=IP Whitelist for Public API Not Required"
-"ORG_PUBLIC_API_WHITELIST_REQUIRED" => "=Require IP Whitelist for Public API Enabled"
-"ORG_RENAMED" => "=Organization has been renamed"
-"ORG_TWO_FACTOR_AUTH_OPTIONAL" => "=Two-factor Authentication Optional"
-"ORG_TWO_FACTOR_AUTH_REQUIRED" => "=Two-factor Authentication Required"
-"ORG_USERS_WITHOUT_MFA" => "=Organization users do not have two-factor authentication enabled"
-"ALL_USERS_HAVE_MULTIFACTOR_AUTH" => "=Users have two-factor authentication enabled"
-"USERS_WITHOUT_MULTIFACTOR_AUTH" => "=Users do not have two-factor authentication enabled"
-"CONFIGURATION_CHANGED" => "=Replica set has an updated configuration"
-"ENOUGH_HEALTHY_MEMBERS" => "=Replica set has enough healthy members"
-"MEMBER_ADDED" => "=Replica set member added"
-"MEMBER_REMOVED" => "=Replica set member removed"
-"MULTIPLE_PRIMARIES" => "=Replica set elected multiple primaries"
-"NO_PRIMARY" => "=Replica set has no primary"
-"ONE_PRIMARY" => "=Replica set elected one primary"
-"PRIMARY_ELECTED" => "=Replica set elected a new primary"
-"TOO_FEW_HEALTHY_MEMBERS" => "=Replica set has too few healthy members"
-"TOO_MANY_ELECTIONS" => "=Replica set has too many election events"
-"TOO_MANY_UNHEALTHY_MEMBERS" => "=Replica set has too many unhealthy members"
-"TEAM_ADDED_TO_GROUP" => "=Team added to project"
-"TEAM_CREATED" => "=Team created"
-"TEAM_DELETED" => "=Team deleted"
-"TEAM_NAME_CHANGED" => "=Team name changed"
-"TEAM_REMOVED_FROM_GROUP" => "=Team removed from project"
-"TEAM_ROLES_MODIFIED" => "=Team roles modified in project"
-"TEAM_UPDATED" => "=Team updated"
-"USER_ADDED_TO_TEAM" => "=User added to team"
-"INVITED_TO_GROUP" => "=User was invited to project"
-"INVITED_TO_ORG" => "=User was invited to organization"
-"JOIN_GROUP_REQUEST_APPROVED_AUDIT" => "=Request to join project was approved"
-"JOIN_GROUP_REQUEST_DENIED_AUDIT" => "=Request to join project was denied"
-"JOINED_GROUP" => "=User joined the project"
-"JOINED_ORG" => "=User joined the organization"
-"JOINED_TEAM" => "=User joined the team"
-"REMOVED_FROM_GROUP" => "=User left the project"
-"REMOVED_FROM_ORG" => "=User left the organization"
-"REMOVED_FROM_TEAM" => "=User left the team"
-"REQUESTED_TO_JOIN_GROUP" => "=User requested to join project"
-"USER_ROLES_CHANGED_AUDIT" => "=User had their role changed"
+pub fn get_message_string(alert_type: &str) -> Option<&str> {
+    match alert_type {
+        "AUTOMATION_AGENT_DOWN" => Some("Automation is down"),
+        "AUTOMATION_AGENT_UP" => Some("Automation is up"),
+        "BACKUP_AGENT_CONF_CALL_FAILURE" => Some("Backup has too many conf call failures"),
+        "BACKUP_AGENT_DOWN" => Some("Backup is down"),
+        "BACKUP_AGENT_UP" => Some("Backup is up"),
+        "BACKUP_AGENT_VERSION_BEHIND" => Some("Backup does not have the latest version"),
+        "BACKUP_AGENT_VERSION_CURRENT" => Some("Backup has the latest version"),
+        "MONITORING_AGENT_DOWN" => Some("Monitoring is down"),
+        "MONITORING_AGENT_UP" => Some("Monitoring is up"),
+        "MONITORING_AGENT_VERSION_BEHIND" => Some("Monitoring does not have the latest version"),
+        "MONITORING_AGENT_VERSION_CURRENT" => Some("Monitoring has the latest version"),
+        "AUTOMATION_CONFIG_PUBLISHED_AUDIT" => Some("Deployment configuration published"),
+        "BAD_CLUSTERSHOTS" => Some("Backup has possibly inconsistent cluster snapshots"),
+        "CLUSTER_BLACKLIST_UPDATED_AUDIT" => Some("Excluded namespaces were modified for cluster"),
+        "CLUSTER_CHECKKPOINT_UPDATED_AUDIT" => Some("Checkpoint interval updated for cluster"),
+        "CLUSTER_CREDENTIAL_UPDATED_AUDIT" => Some("Backup authentication credentials updated for cluster"),
+        "CLUSTER_SNAPSHOT_SCHEDULE_UPDATED_AUDIT" => Some("Snapshot schedule updated for cluster"),
+        "CLUSTER_STATE_CHANGED_AUDIT" => Some("Cluster backup state is now"),
+        "CLUSTER_STORAGE_ENGINE_UPDATED_AUDIT" => Some("Cluster storage engine has been updated"),
+        "CLUSTERSHOT_DELETED_AUDIT" => Some("Cluster snapshot has been deleted"),
+        "CLUSTERSHOT_EXPIRY_UPDATED_AUDIT" => Some("Clustershot expiry has been updated"),
+        "CONSISTENT_BACKUP_CONFIGURATION" => Some("Backup configuration is consistent"),
+        "GOOD_CLUSTERSHOT" => Some("Backup has a good clustershot"),
+        "INCONSISTENT_BACKUP_CONFIGURATION" => Some("Inconsistent backup configuration has been detected"),
+        "INITIAL_SYNC_FINISHED_AUDIT" => Some("Backup initial sync finished"),
+        "INITIAL_SYNC_STARTED_AUDIT" => Some("Backup initial sync started"),
+        "OPLOG_BEHIND" => Some("Backup oplog is behind"),
+        "OPLOG_CURRENT" => Some("Backup oplog is current"),
+        "RESTORE_REQUESTED_AUDIT" => Some("A restore has been requested"),
+        "RESYNC_PERFORMED" => Some("Backup has been resynced"),
+        "RESYNC_REQUIRED" => Some("Backup requires a resync"),
+        "RS_BLACKLIST_UPDATED_AUDIT" => Some("Excluded namespaces were modified for replica set"),
+        "RS_CREDENTIAL_UPDATED_AUDIT" => Some("Backup authentication credentials updated for replica set"),
+        "RS_ROTATE_MASTER_KEY_AUDIT" => Some("A master key rotation has been requested for a replica set"),
+        "RS_SNAPSHOT_SCHEDULE_UPDATED_AUDIT" => Some("Snapshot schedule updated for replica set"),
+        "RS_STATE_CHANGED_AUDIT" => Some("Replica set backup state is now"),
+        "RS_STORAGE_ENGINE_UPDATED_AUDIT" => Some("Replica set storage engine has been updated"),
+        "SNAPSHOT_DELETED_AUDIT" => Some("Snapshot has been deleted"),
+        "SNAPSHOT_EXPIRY_UPDATED_AUDIT" => Some("Snapshot expiry has been updated"),
+        "SYNC_PENDING_AUDIT" => Some("Backup sync is pending"),
+        "SYNC_REQUIRED_AUDIT" => Some("Backup sync has been initiated"),
+        "BI_CONNECTOR_DOWN" => Some("BI Connector is down"),
+        "BI_CONNECTOR_UP" => Some("BI Connector is up Project"),
+        "CLUSTER_MONGOS_IS_MISSING" => Some("Cluster is missing an active mongos"),
+        "CLUSTER_MONGOS_IS_PRESENT" => Some("Cluster has an active mongos"),
+        "SHARD_ADDED" => Some("Shard added"),
+        "SHARD_REMOVED" => Some("Shard removed"),
+        "DATA_EXPLORER" => Some("User performed a Data Explorer read-only operation"),
+        "DATA_EXPLORER_CRUD" => Some("User performed a Data Explorer CRUD operation"),
+        "ADD_HOST_AUDIT" => Some("Host added"),
+        "ADD_HOST_TO_REPLICA_SET_AUDIT" => Some("Host added to replica set"),
+        "ATTEMPT_KILLOP_AUDIT" => Some("Attempted to kill operation"),
+        "ATTEMPT_KILLSESSION_AUDIT" => Some("Attempted to kill session"),
+        "DB_PROFILER_DISABLE_AUDIT" => Some("Database profiling disabled"),
+        "DB_PROFILER_ENABLE_AUDIT" => Some("Database profiling enabled"),
+        "DELETE_HOST_AUDIT" => Some("Host removed"),
+        "DISABLE_HOST_AUDIT" => Some("Host disabled"),
+        "HIDE_AND_DISABLE_HOST_AUDIT" => Some("Host disabled and hidden"),
+        "HIDE_HOST_AUDIT" => Some("Host hidden"),
+        "HOST_DOWN" => Some("Host is down"),
+        "HOST_DOWNGRADED" => Some("Host has been downgraded"),
+        "HOST_IP_CHANGED_AUDIT" => Some("Host IP address changed"),
+        "HOST_NOW_PRIMARY" => Some("Host is now primary"),
+        "HOST_NOW_SECONDARY" => Some("Host is now secondary"),
+        "HOST_NOW_STANDALONE" => Some("Host is now a standalone"),
+        "HOST_RECOVERED" => Some("Host has recovered"),
+        "HOST_RECOVERING" => Some("Host is recovering"),
+        "HOST_RESTARTED" => Some("Host has restarted"),
+        "HOST_ROLLBACK" => Some("Host experienced a rollback"),
+        "HOST_SSL_CERTIFICATE_CURRENT" => Some("Host’s SSL certificate is current"),
+        "HOST_SSL_CERTIFICATE_STALE" => Some("Host’s SSL certificate will expire within 30 days"),
+        "HOST_UP" => Some("Host is up"),
+        "HOST_UPGRADED" => Some("Host has been upgraded"),
+        "INSIDE_METRIC_THRESHOLD" => Some("Inside metric threshold"),
+        "NEW_HOST" => Some("Host is new"),
+        "OUTSIDE_METRIC_THRESHOLD" => Some("Outside metric threshold"),
+        "PAUSE_HOST_AUDIT" => Some("Host paused"),
+        "REMOVE_HOST_FROM_REPLICA_SET_AUDIT" => Some("Host removed from replica set"),
+        "RESUME_HOST_AUDIT" => Some("Host resumed"),
+        "UNDELETE_HOST_AUDIT" => Some("Host undeleted"),
+        "VERSION_BEHIND" => Some("Host does not have the latest version"),
+        "VERSION_CHANGED" => Some("Host version changed"),
+        "VERSION_CURRENT" => Some("Host has the latest version Project"),
+        "ALL_ORG_USERS_HAVE_MFA" => Some("Organization users have two-factor authentication enabled"),
+        "ORG_API_KEY_ADDED" => Some("API key has been added"),
+        "ORG_API_KEY_DELETED" => Some("API key has been deleted"),
+        "ORG_EMPLOYEE_ACCESS_RESTRICTED" => Some("MongoDB Production Support Employees restricted from accessing Atlas backend infrastructure for any Atlas cluster in this organization (You may grant a 24 hour bypass to the access restriction at the Atlas cluster level),"),
+        "ORG_EMPLOYEE_ACCESS_UNRESTRICTED" => Some("MongoDB Production Support Employees unrestricted from accessing Atlas backend infrastructure for any Atlas cluster in this organization"),
+        "ORG_PUBLIC_API_WHITELIST_NOT_REQUIRED" => Some("IP Whitelist for Public API Not Required"),
+        "ORG_PUBLIC_API_WHITELIST_REQUIRED" => Some("Require IP Whitelist for Public API Enabled"),
+        "ORG_RENAMED" => Some("Organization has been renamed"),
+        "ORG_TWO_FACTOR_AUTH_OPTIONAL" => Some("Two-factor Authentication Optional"),
+        "ORG_TWO_FACTOR_AUTH_REQUIRED" => Some("Two-factor Authentication Required"),
+        "ORG_USERS_WITHOUT_MFA" => Some("Organization users do not have two-factor authentication enabled"),
+        "ALL_USERS_HAVE_MULTIFACTOR_AUTH" => Some("Users have two-factor authentication enabled"),
+        "USERS_WITHOUT_MULTIFACTOR_AUTH" => Some("Users do not have two-factor authentication enabled"),
+        "CONFIGURATION_CHANGED" => Some("Replica set has an updated configuration"),
+        "ENOUGH_HEALTHY_MEMBERS" => Some("Replica set has enough healthy members"),
+        "MEMBER_ADDED" => Some("Replica set member added"),
+        "MEMBER_REMOVED" => Some("Replica set member removed"),
+        "MULTIPLE_PRIMARIES" => Some("Replica set elected multiple primaries"),
+        "NO_PRIMARY" => Some("Replica set has no primary"),
+        "ONE_PRIMARY" => Some("Replica set elected one primary"),
+        "PRIMARY_ELECTED" => Some("Replica set elected a new primary"),
+        "TOO_FEW_HEALTHY_MEMBERS" => Some("Replica set has too few healthy members"),
+        "TOO_MANY_ELECTIONS" => Some("Replica set has too many election events"),
+        "TOO_MANY_UNHEALTHY_MEMBERS" => Some("Replica set has too many unhealthy members"),
+        "TEAM_ADDED_TO_GROUP" => Some("Team added to project"),
+        "TEAM_CREATED" => Some("Team created"),
+        "TEAM_DELETED" => Some("Team deleted"),
+        "TEAM_NAME_CHANGED" => Some("Team name changed"),
+        "TEAM_REMOVED_FROM_GROUP" => Some("Team removed from project"),
+        "TEAM_ROLES_MODIFIED" => Some("Team roles modified in project"),
+        "TEAM_UPDATED" => Some("Team updated"),
+        "USER_ADDED_TO_TEAM" => Some("User added to team"),
+        "INVITED_TO_GROUP" => Some("User was invited to project"),
+        "INVITED_TO_ORG" => Some("User was invited to organization"),
+        "JOIN_GROUP_REQUEST_APPROVED_AUDIT" => Some("Request to join project was approved"),
+        "JOIN_GROUP_REQUEST_DENIED_AUDIT" => Some("Request to join project was denied"),
+        "JOINED_GROUP" => Some("User joined the project"),
+        "JOINED_ORG" => Some("User joined the organization"),
+        "JOINED_TEAM" => Some("User joined the team"),
+        "REMOVED_FROM_GROUP" => Some("User left the project"),
+        "REMOVED_FROM_ORG" => Some("User left the organization"),
+        "REMOVED_FROM_TEAM" => Some("User left the team"),
+        "REQUESTED_TO_JOIN_GROUP" => Some("User requested to join project"),
+        "USER_ROLES_CHANGED_AUDIT" => Some("User had their role changed"),
+        _ => None
+    }
+}
