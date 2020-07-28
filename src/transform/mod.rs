@@ -1,3 +1,112 @@
+use serde_json::json;
+use serde::{Deserialize, Serialize};
+
+#[derive(Hash, Eq, Default, PartialEq, Debug, Clone, Serialize, Deserialize, Ord, PartialOrd)]
+struct FactEntry {
+    pub name: String,
+    pub value: String
+}
+
+// Accept alert json and return microsoft teams card
+pub fn create_card(alert_json: serde_json::Value) -> Result<serde_json::Value, Box<dyn std::error::Error + Send + Sync>> {
+    let mut card_body = json!({
+        "@type": "MessageCard",
+        "@context": "https://schema.org/extensions",
+        "summary": "MongoDB Alert Card",
+        "themeColor": "",
+        "title": "",
+        "sections": [
+            {
+                "activityTitle": "",
+                "activitySubtitle": "",
+                "activityImage": "https://company-30077.frontify.com/api/screen/download/eyJpZCI6MzQwMzI2NCwidmVyc2lvbiI6IjIwMTktMDgtMDIgMTk6Mjg6MDYifQ:frontify:DkJTntON9g0YByA8Q_M4vJX_XxO7je1rn7PJN6RJ_TI/?download&title_as_filename&track",
+                "facts": {}
+            }
+        ]
+    });
+
+    // Set status of card
+    if alert_json["status"].is_string() {
+        match alert_json["status"].as_str() {
+            Some("OPEN") => {
+                card_body["title"] = serde_json::to_value("New Alert Triggered")?;
+                card_body["themeColor"] = serde_json::to_value("D7000C")?;
+                if alert_json["created"].is_string() {
+                    card_body["sections"][0]["activitySubtitle"] = alert_json["created"].clone() 
+                };
+            },
+            Some("CLOSED") => {
+                card_body["title"] = serde_json::to_value("Alert Closed")?;
+                card_body["themeColor"] = serde_json::to_value("12924F")?;
+                if alert_json["updated"].is_string() {
+                    card_body["sections"][0]["activitySubtitle"] = alert_json["resolved"].clone() 
+                };
+            },
+            Some("INFORMATIONAL") => {
+                card_body["title"] = serde_json::to_value("Informational Alert")?;
+                card_body["themeColor"] = serde_json::to_value("12924F")?;
+                if alert_json["created"].is_string() {
+                    card_body["sections"][0]["activitySubtitle"] = alert_json["created"].clone() 
+                };
+            },
+            _ => { 
+                card_body["title"] = serde_json::to_value("Other Alert")?;
+                card_body["themeColor"] = serde_json::to_value("0078D7")?;
+                if alert_json["created"].is_string() {
+                    card_body["sections"][0]["activitySubtitle"] = alert_json["created"].clone() 
+                };
+            }
+        }
+    };
+  
+    // Set title based on eventTypeName
+    if alert_json["eventTypeName"].is_string() {
+        match get_message_string(&alert_json["eventTypeName"].as_str().expect("Logically, we should not have hit this error")) {
+            Some(string) => card_body["sections"][0]["activityTitle"] = serde_json::to_value(string)?,
+            None => card_body["sections"][0]["activityTitle"] = alert_json["eventTypeName"].clone()
+        }
+    };
+
+    let mut facts_vec: Vec<FactEntry> = Vec::new();
+
+    // Create facts array and push to card
+    if alert_json["replicaSetName"].is_string() {
+        let fact = FactEntry { name: "Replicaset".to_string(), value: alert_json["replicaSetName"].to_string() };
+        facts_vec.push(fact);
+    } else if alert_json["clusterName"].is_string() {
+        let fact = FactEntry { name: "Cluster Name".to_string(), value: alert_json["clusterName"].to_string() };
+        facts_vec.push(fact);
+    } 
+    if alert_json["hostnameAndPort"].is_string() {
+        let fact = FactEntry { name: "Server".to_string(), value: alert_json["hostnameAndPort"].to_string() };
+        facts_vec.push(fact);
+    } 
+    if alert_json["sourceTypeName"].is_string() {
+        let fact = FactEntry { name: "Source Type".to_string(), value: alert_json["sourceTypeName"].to_string() };
+        facts_vec.push(fact);
+    } 
+    if alert_json["metricName"].is_string() {
+        let fact = FactEntry { name: "Metric Name".to_string(), value: alert_json["metricName"].to_string() };
+        facts_vec.push(fact);
+    } 
+    if alert_json["currentValue"]["number"].is_string() {
+        let fact = FactEntry { name: "Metric Value".to_string(), value: alert_json["currentValue"]["number"].to_string() };
+        facts_vec.push(fact);
+    } 
+    if alert_json["currentValue"]["units"].is_string() {
+        let fact = FactEntry { name: "Metric Unit".to_string(), value: alert_json["currentValue"]["units"].to_string() };
+        facts_vec.push(fact);
+    } 
+    if alert_json["typeName"].is_string() {
+        let fact = FactEntry { name: "Type".to_string(), value: alert_json["typeName"].to_string() };
+        facts_vec.push(fact);
+    } 
+
+    let facts = json!(facts_vec);
+    card_body["sections"][0]["facts"] = facts;
+    Ok(card_body)
+}
+
 pub fn get_message_string(alert_type: &str) -> Option<&str> {
     match alert_type {
         "AUTOMATION_AGENT_DOWN" => Some("Automation is down"),
