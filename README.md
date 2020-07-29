@@ -1,6 +1,6 @@
 # Overview
 
-Since Mongo Ops Manager does not support sending alerts to Microsoft Teams, this is a rust web server that receives post messages from Ops Manager and forwards them to the specified Teams webhook.
+Since Mongo Atlas and Ops Manager do not currently support sending alerts to directly Microsoft Teams, this is a rust web server that receives post messages from Atlas or Ops Manager and forwards them to a specified Teams webhook.
 
 ## Using mongo_alerts_2teams
 
