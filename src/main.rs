@@ -1,21 +1,21 @@
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Server, Request, Body};
-use env_logger::Builder;
-use log::LevelFilter;
-use clap::Clap;
 use chrono::Local;
+use clap::Clap;
+use env_logger::Builder;
+use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Request, Server};
+use log::LevelFilter;
 use std::io::Write;
 
-mod transform;
-mod server;
 mod post;
+mod server;
+mod transform;
 
 #[derive(Clap, Clone)]
 #[clap(version = "0.1", author = "Verticaleap <dan@findelabs.com>")]
 struct Opts {
-    #[clap(short, long )]
+    #[clap(short, long)]
     url: String,
-    #[clap(short, long )]
+    #[clap(short, long)]
     port: u16,
 }
 
@@ -26,7 +26,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     // Initialize log Builder
     Builder::new()
         .format(|buf, record| {
-            writeln!(buf,
+            writeln!(
+                buf,
                 "{} [{}] - {}",
                 Local::now().format("%Y-%m-%dT%H:%M:%S:%f"),
                 record.level(),
@@ -38,7 +39,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     let addr = ([0, 0, 0, 0], opts.port).into();
 
-    let service = make_service_fn(move |_| { 
+    let service = make_service_fn(move |_| {
         let opts = opts.clone();
         async move {
             Ok::<_, hyper::Error>(service_fn(move |req: Request<Body>| {
@@ -46,7 +47,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             }))
         }
     });
-
 
     let server = Server::bind(&addr).serve(service);
 

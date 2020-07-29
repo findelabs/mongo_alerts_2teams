@@ -1,12 +1,15 @@
 use hyper::{Body, Method, Request, Response, StatusCode};
 use std::str::from_utf8;
 
-use crate::transform;
 use crate::post;
+use crate::transform;
 
 // This is our service handler. It receives a Request, routes on its
 // path, and returns a Future of a Response.
-pub async fn echo(req: Request<Body>, url: String) -> Result<Response<Body>, Box<dyn std::error::Error + Send + Sync>> {
+pub async fn echo(
+    req: Request<Body>,
+    url: String,
+) -> Result<Response<Body>, Box<dyn std::error::Error + Send + Sync>> {
     match (req.method(), req.uri().path()) {
         // Serve some instructions at /
         (&Method::GET, "/") => Ok(Response::new(Body::from(
@@ -48,7 +51,6 @@ pub async fn echo(req: Request<Body>, url: String) -> Result<Response<Body>, Box
             let whole_body_vec = whole_body.iter().cloned().collect::<Vec<u8>>();
             let value = from_utf8(&whole_body_vec).to_owned()?;
             let value_json: serde_json::Value = serde_json::from_str(value)?;
-            
             let card_body = transform::create_card(value_json.clone())?;
 
             match post::post_retry(card_body, url).await {
@@ -81,4 +83,3 @@ pub async fn echo(req: Request<Body>, url: String) -> Result<Response<Body>, Box
         }
     }
 }
-
