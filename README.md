@@ -25,7 +25,7 @@ The executable will be listening on the following paths:
 /alert:
     This will receive posted alerts and transform them before sending them to the Microsoft Teams webhook
 /testalert:
-    This will receive posted aperts, and return the transformed card back to the client
+    This will receive posted alerts, and return the transformed card back to the client
 ```
 
 ## Configuration
