@@ -16,6 +16,18 @@ Binary Executable:
 cargo install --git https://github.com/findelabs/mongo_alerts_2teams.git --root /usr/local/bin
 ```
 
+The executable will be listening on the following paths:
+```
+/echo:
+    This will return the json back to the user, good for debugging
+/stdout:
+    This will save the posted body to stdout within the container
+/alert:
+    This will receive posted alerts and transform them before sending them to the Microsoft Teams webhook
+/testalert:
+    This will receive posted aperts, and return the transformed card back to the client
+```
+
 ## Configuration
 
 Command line options:
