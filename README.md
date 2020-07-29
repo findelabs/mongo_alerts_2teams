@@ -13,7 +13,7 @@ docker run -p 8000:8000 verticaleap/mongo_alert_2teams:0.1 --url "https://outloo
 
 Binary Executable:
 ```
-cargo install --git https://github.com/findelabs/mongo_alerts_2teams.git --root /usr/local/bin
+cargo install --git https://github.com/findelabs/mongo_alerts_2teams.git
 ```
 
 The executable will be listening on the following paths:
