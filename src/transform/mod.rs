@@ -27,33 +27,38 @@ pub fn create_card(
         ]
     });
 
+    let green: &str = "12924F";
+    let yellow: &str = "12924F";
+    let red: &str = "D7000C";
+    let other: &str = "0078D7";
+
     // Set status of card
     if alert_json["status"].is_string() {
         match alert_json["status"].as_str() {
             Some("OPEN") => {
                 card_body["title"] = serde_json::to_value("New Alert Triggered")?;
-                card_body["themeColor"] = serde_json::to_value("D7000C")?;
+                card_body["themeColor"] = serde_json::to_value(red)?;
                 if alert_json["created"].is_string() {
                     card_body["sections"][0]["activitySubtitle"] = alert_json["created"].clone()
                 };
             }
             Some("CLOSED") => {
                 card_body["title"] = serde_json::to_value("Alert Closed")?;
-                card_body["themeColor"] = serde_json::to_value("12924F")?;
+                card_body["themeColor"] = serde_json::to_value(green)?;
                 if alert_json["updated"].is_string() {
                     card_body["sections"][0]["activitySubtitle"] = alert_json["resolved"].clone()
                 };
             }
             Some("INFORMATIONAL") => {
                 card_body["title"] = serde_json::to_value("Informational Alert")?;
-                card_body["themeColor"] = serde_json::to_value("12924F")?;
+                card_body["themeColor"] = serde_json::to_value(yellow)?;
                 if alert_json["created"].is_string() {
                     card_body["sections"][0]["activitySubtitle"] = alert_json["created"].clone()
                 };
             }
             _ => {
                 card_body["title"] = serde_json::to_value("Other Alert")?;
-                card_body["themeColor"] = serde_json::to_value("0078D7")?;
+                card_body["themeColor"] = serde_json::to_value(other)?;
                 if alert_json["created"].is_string() {
                     card_body["sections"][0]["activitySubtitle"] = alert_json["created"].clone()
                 };
