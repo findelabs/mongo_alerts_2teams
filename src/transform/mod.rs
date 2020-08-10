@@ -14,7 +14,7 @@ pub fn create_card(
     let mut card_body = json!({
         "@type": "MessageCard",
         "@context": "https://schema.org/extensions",
-        "summary": "MongoDB Alert Card",
+        "summary": "",
         "themeColor": "",
         "title": "",
         "sections": [
@@ -69,7 +69,8 @@ pub fn create_card(
                 .expect("Logically, we should not have hit this error"),
         ) {
             Some(string) => {
-                card_body["sections"][0]["activityTitle"] = serde_json::to_value(string)?
+                card_body["sections"][0]["activityTitle"] = serde_json::to_value(string)?;
+                card_body["sections"][0]["summary"] = serde_json::to_value(string)?;
             }
             None => card_body["sections"][0]["activityTitle"] = alert_json["eventTypeName"].clone(),
         }
