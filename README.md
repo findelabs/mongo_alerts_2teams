@@ -8,7 +8,7 @@ You can either run either the docker container or a compiled binary.
 
 Docker image: 
 ```
-docker run -p 8000:8000 verticaleap/mongo_alert_2teams:0.1 --url "https://outlook.office.com/webhook/"
+docker run -p 8000:8000 verticaleap/mongo_alerts_2teams:latest --url "https://outlook.office.com/webhook/..."
 ```
 
 Binary Executable:
