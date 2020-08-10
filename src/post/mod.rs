@@ -35,10 +35,7 @@ pub async fn post_retry(card_body: serde_json::Value, url: String) -> Option<boo
                             "Failed to post to teams, got status code {}",
                             m.status().as_u16()
                         );
-                        log::info!(
-                            "Message from Teams endpoint: {:#?}",
-                            m
-                        );
+                        log::info!("Message from Teams endpoint: {:#?}", m);
                         return None;
                     }
                 }
