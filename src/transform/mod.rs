@@ -134,6 +134,13 @@ pub fn create_card(
         };
         facts_vec.push(fact);
     }
+    if alert_json["groupId"].is_string() {
+        let fact = FactEntry {
+            name: "Group".to_string(),
+            value: alert_json["groupId"].to_string(),
+        };
+        facts_vec.push(fact);
+    }
 
     let facts = json!(facts_vec);
     card_body["sections"][0]["facts"] = facts;
