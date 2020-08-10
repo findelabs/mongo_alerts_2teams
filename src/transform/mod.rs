@@ -96,6 +96,12 @@ pub fn create_card(
             value: alert_json["clusterName"].to_string(),
         };
         facts_vec.push(fact);
+    } else if alert_json["groupId"].is_string() {
+        let fact = FactEntry {
+            name: "Group".to_string(),
+            value: alert_json["groupId"].to_string(),
+        };
+        facts_vec.push(fact);
     }
     if alert_json["hostnameAndPort"].is_string() {
         let fact = FactEntry {
@@ -136,13 +142,6 @@ pub fn create_card(
         let fact = FactEntry {
             name: "Type".to_string(),
             value: alert_json["typeName"].to_string(),
-        };
-        facts_vec.push(fact);
-    }
-    if alert_json["groupId"].is_string() {
-        let fact = FactEntry {
-            name: "Group".to_string(),
-            value: alert_json["groupId"].to_string(),
         };
         facts_vec.push(fact);
     }
