@@ -75,7 +75,8 @@ pub fn create_card(
         ) {
             Some(string) => {
                 card_body["sections"][0]["activityTitle"] = serde_json::to_value(string)?;
-                card_body["summary"] = serde_json::to_value(string)?;
+                let summary = format!("[{}]: {}", card_body["title"], string);
+                card_body["summary"] = serde_json::to_value(summary)?;
             }
             None => card_body["sections"][0]["activityTitle"] = alert_json["eventTypeName"].clone(),
         }
