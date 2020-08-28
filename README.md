@@ -33,12 +33,12 @@ The executable will be listening on the following paths:
 Command line options:
 ```
 --config
-    Specify url for microsoft teams webhook
+    Specify configuration file
 --port
     Port to listen on
 ```
 
-You will need to specify a configuration file that lists each channel and corresponding Teams webhook. Then specify which channel to alert by passing the channel to /alert. An example is shown here:
+You will need to specify a configuration file that lists each channel and corresponding Teams webhook. Then specify which channel to alert by passing the channel to /alert. An example config is shown here:
 ```
 endpointone: "https://outlook.office.com/webhook/"
 endpointtwo: "https://outlook.office.com/webhook/"
