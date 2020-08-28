@@ -46,7 +46,7 @@ pub fn match_channel(req: &Parts, config: ConfigHash) -> Option<String> {
             match config.get(&channel) {
                 Some(url) => Some(url.to_string()),
                 None => {
-                    log::error!("Channel not found: {}", &channel);
+                    log::error!("Channel not found: {}", &req.uri);
                     None
                 }
             }

@@ -57,7 +57,7 @@ pub fn create_card(
                 };
             }
             _ => {
-                card_body["title"] = serde_json::to_value("Other Alert")?;
+                card_body["title"] = serde_json::to_value(alert_json["status"].clone())?;
                 card_body["themeColor"] = serde_json::to_value(other)?;
                 if alert_json["created"].is_string() {
                     card_body["sections"][0]["activitySubtitle"] = alert_json["created"].clone()
