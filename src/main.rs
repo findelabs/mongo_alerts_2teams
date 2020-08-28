@@ -18,7 +18,7 @@ mod transform;
 struct Opts {
     #[clap(short, long)]
     config: String,
-    #[clap(short, long)]
+    #[clap(short, long, default_value = "8000")]
     port: u16,
 }
 
