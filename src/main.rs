@@ -5,19 +5,24 @@ use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Request, Server};
 use log::LevelFilter;
 use std::io::Write;
+use std::sync::{Arc,Mutex};
+use std::collections::HashMap;
 
 mod post;
 mod server;
 mod transform;
+mod config;
 
 #[derive(Clap, Clone)]
 #[clap(version = "0.1", author = "Verticaleap <dan@findelabs.com>")]
 struct Opts {
     #[clap(short, long)]
-    url: String,
+    config: String,
     #[clap(short, long)]
     port: u16,
 }
+
+type ConfigHash = Arc<Mutex<HashMap<String,String>>>;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -37,13 +42,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .filter(None, LevelFilter::Info)
         .init();
 
+    // Read in config file
+    let config = config::parse(&opts.config)?;
+
     let addr = ([0, 0, 0, 0], opts.port).into();
 
     let service = make_service_fn(move |_| {
-        let opts = opts.clone();
+        let config = config.clone();
         async move {
             Ok::<_, hyper::Error>(service_fn(move |req: Request<Body>| {
-                server::echo(req, opts.url.clone())
+                server::echo(req, config.clone())
             }))
         }
     });

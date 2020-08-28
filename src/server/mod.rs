@@ -3,12 +3,14 @@ use std::str::from_utf8;
 
 use crate::post;
 use crate::transform;
+use crate::config;
+use crate::ConfigHash;
 
 // This is our service handler. It receives a Request, routes on its
 // path, and returns a Future of a Response.
 pub async fn echo(
     req: Request<Body>,
-    url: String,
+    config: ConfigHash
 ) -> Result<Response<Body>, Box<dyn std::error::Error + Send + Sync>> {
     match (req.method(), req.uri().path()) {
         // Serve some instructions at /
@@ -47,29 +49,40 @@ pub async fn echo(
 
         // Alert transformed card with received variables
         (&Method::POST, "/alert") => {
-            let whole_body = hyper::body::to_bytes(req.into_body()).await?;
+            let (parts,body) = req.into_parts();
+            let whole_body = hyper::body::to_bytes(body).await?;
             let whole_body_vec = whole_body.iter().cloned().collect::<Vec<u8>>();
             let value = from_utf8(&whole_body_vec).to_owned()?;
             let value_json: serde_json::Value = serde_json::from_str(value)?;
             let card_body = transform::create_card(value_json.clone())?;
 
-            match post::post_retry(card_body, url).await {
-                Some(true) => {
-                    let mut response = Response::default();
-                    *response.status_mut() = StatusCode::OK;
-                    log::info!("Successfully posted id:{} to teams", value_json["id"]);
-                    Ok(response)
-                },
-                Some(false) => {
-                    let mut response = Response::default();
-                    *response.status_mut() = StatusCode::REQUEST_TIMEOUT;
-                    log::error!("Posting to teams failed for id:{}, bulk post failure", value_json["id"]);
-                    Ok(response)
+            match config::match_channel(&parts, config) {
+                Some(url) => {
+                    match post::post_retry(card_body, url).await {
+                        Some(true) => {
+                            let mut response = Response::default();
+                            *response.status_mut() = StatusCode::OK;
+                            log::info!("Successfully posted id: {} to teams", value_json["id"]);
+                            Ok(response)
+                        },
+                        Some(false) => {
+                            let mut response = Response::default();
+                            *response.status_mut() = StatusCode::REQUEST_TIMEOUT;
+                            log::error!("Posting to teams failed for id: {}, bulk post failure", value_json["id"]);
+                            Ok(response)
+                        },
+                        None => {
+                            let mut response = Response::default();
+                            *response.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
+                            log::error!("Post failed for id: {}", value_json["id"]);
+                            Ok(response)
+                        }
+                    }
                 },
                 None => {
                     let mut response = Response::default();
-                    *response.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
-                    log::error!("Post failed for id:{}", value_json["id"]);
+                    *response.status_mut() = StatusCode::BAD_REQUEST;
+                    log::error!("Bad channel specified for id: {}", value_json["id"]);
                     Ok(response)
                 }
             }
