@@ -4,14 +4,14 @@ use env_logger::Builder;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Request, Server};
 use log::LevelFilter;
-use std::io::Write;
-use std::sync::{Arc,Mutex};
 use std::collections::HashMap;
+use std::io::Write;
+use std::sync::{Arc, Mutex};
 
+mod config;
 mod post;
 mod server;
 mod transform;
-mod config;
 
 #[derive(Clap, Clone)]
 #[clap(version = "0.1", author = "Verticaleap <dan@findelabs.com>")]
@@ -22,7 +22,7 @@ struct Opts {
     port: u16,
 }
 
-type ConfigHash = Arc<Mutex<HashMap<String,String>>>;
+type ConfigHash = Arc<Mutex<HashMap<String, String>>>;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {

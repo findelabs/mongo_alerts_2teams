@@ -22,7 +22,7 @@ The executable will be listening on the following paths:
     This will return the json back to the user, good for debugging
 /stdout:
     This will save the posted body to stdout within the container
-/alert:
+/alert?channel=$CHANNEL:
     This will receive posted alerts and transform them before sending them to the Microsoft Teams webhook
 /testalert:
     This will receive posted alerts, and return the transformed card back to the client
@@ -32,8 +32,16 @@ The executable will be listening on the following paths:
 
 Command line options:
 ```
---url 
+--config
     Specify url for microsoft teams webhook
 --port
     Port to listen on
 ```
+
+You will need to specify a configuration file that lists each channel and corresponding Teams webhook. Then specify which channel to alert by passing the channel to /alert. An example is shown here:
+```
+endpointone: "https://outlook.office.com/webhook/"
+endpointtwo: "https://outlook.office.com/webhook/"
+```
+
+To send an alert to endpointone, configure Ops Manager to send the alert to http://localhost:8000/alert?channel=endpointone

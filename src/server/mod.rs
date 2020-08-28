@@ -1,16 +1,16 @@
 use hyper::{Body, Method, Request, Response, StatusCode};
 use std::str::from_utf8;
 
+use crate::config;
 use crate::post;
 use crate::transform;
-use crate::config;
 use crate::ConfigHash;
 
 // This is our service handler. It receives a Request, routes on its
 // path, and returns a Future of a Response.
 pub async fn echo(
     req: Request<Body>,
-    config: ConfigHash
+    config: ConfigHash,
 ) -> Result<Response<Body>, Box<dyn std::error::Error + Send + Sync>> {
     match (req.method(), req.uri().path()) {
         // Serve some instructions at /
