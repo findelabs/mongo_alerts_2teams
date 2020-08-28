@@ -8,7 +8,7 @@ You can either run either the docker container or a compiled binary.
 
 Docker image: 
 ```
-docker run -p 8000:8000 verticaleap/mongo_alerts_2teams:latest --url "https://outlook.office.com/webhook/..."
+docker run -d -p 8000:8000  -v $(pwd)/example.config:/app/example.config verticaleap/mongo_alerts_2teams:latest --config /app/example.config
 ```
 
 Binary Executable:
@@ -43,8 +43,6 @@ You will need to specify a configuration file that lists each channel and corres
 endpointone: "https://outlook.office.com/webhook/"
 endpointtwo: "https://outlook.office.com/webhook/"
 ```
-
-To send an alert to endpointone, configure Ops Manager to send the alert to http://localhost:8000/alert?channel=endpointone
 
 ## Testing
 
