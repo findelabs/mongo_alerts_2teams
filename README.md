@@ -8,7 +8,7 @@ You can either run either the docker container or a compiled binary.
 
 Docker image: 
 ```
-docker run -d -p 8000:8000  -v $(pwd)/example.config:/app/config_example.yml verticaleap/mongo_alerts_2teams:latest --config /app/config_example.yml
+docker run -d -p 8000:8000  -v $(pwd)/example.config:/app/config_example.yml findelabs/mongo_alerts_2teams:latest --config /app/config_example.yml
 ```
 
 Binary Executable:
