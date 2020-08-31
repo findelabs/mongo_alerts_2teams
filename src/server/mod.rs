@@ -88,6 +88,16 @@ pub async fn echo(
             }
         }
 
+        // echo transformed card with received variables
+        (&Method::GET, "/health") => {
+            Ok(Response::new(Body::from("ok".to_string())))
+        }
+
+        // echo transformed card with received variables
+        (&Method::GET, "/config") => {
+            Ok(Response::new(Body::from(format!("{:#?}",config))))
+        }
+
         // Return the 404 Not Found for other routes.
         _ => {
             let mut not_found = Response::default();
