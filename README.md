@@ -26,6 +26,10 @@ The executable will be listening on the following paths:
     This will receive posted alerts and transform them before sending them to the Microsoft Teams webhook
 /testalert:
     This will receive posted alerts, and return the transformed card back to the client
+/health:
+    Prints ok if server is healthy
+/config:
+    Shows the current configuration of endpoints
 ```
 
 ## Configuration
