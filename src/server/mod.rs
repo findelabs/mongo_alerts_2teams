@@ -95,6 +95,7 @@ pub async fn echo(
 
         // echo transformed card with received variables
         (&Method::GET, "/config") => {
+            let config = config.lock().expect("Unable to lock config");
             Ok(Response::new(Body::from(format!("{:#?}",config))))
         }
 
