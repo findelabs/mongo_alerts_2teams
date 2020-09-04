@@ -56,24 +56,26 @@ pub async fn echo(
             let value_json: serde_json::Value = serde_json::from_str(value)?;
             let card_body = transform::create_card(value_json.clone())?;
 
+            log::info!("Received message: {}", value_json);
+
             match config::match_channel(&parts, config) {
                 Some(url) => {
-                    match post::post_retry(card_body, url).await {
+                    match post::post_retry(&card_body, url).await {
                         Some(true) => {
                             let mut response = Response::default();
                             *response.status_mut() = StatusCode::OK;
-                            log::info!("Successfully posted id: {} to teams", value_json["id"]);
+                            log::info!("Successfully posted: \"{}\"", card_body);
                             Ok(response)
                         },
                         Some(false) => {
                             let mut response = Response::default();
-                            *response.status_mut() = StatusCode::REQUEST_TIMEOUT;
+                            *response.status_mut() = StatusCode::TOO_MANY_REQUESTS;
                             log::error!("Posting to teams failed for id: {}, bulk post failure", value_json["id"]);
                             Ok(response)
                         },
                         None => {
                             let mut response = Response::default();
-                            *response.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
+                            *response.status_mut() = StatusCode::BAD_REQUEST;
                             log::error!("Post failed for id: {}", value_json["id"]);
                             Ok(response)
                         }

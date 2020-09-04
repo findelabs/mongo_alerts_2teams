@@ -33,7 +33,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .format(|buf, record| {
             writeln!(
                 buf,
-                "{} [{}] - {}",
+                "{{\"date\": \"{}\", \"level\": \"{}\", \"message\": \"{}\"}}",
                 Local::now().format("%Y-%m-%dT%H:%M:%S:%f"),
                 record.level(),
                 record.args()

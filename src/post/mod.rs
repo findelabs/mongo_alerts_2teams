@@ -1,8 +1,10 @@
+use bytes::Bytes;
 use hyper::{Body, Client, Request};
 use hyper_tls::HttpsConnector;
+use std::str::from_utf8;
 use std::{thread, time};
 
-pub async fn post_retry(card_body: serde_json::Value, url: String) -> Option<bool> {
+pub async fn post_retry(card_body: &serde_json::Value, url: String) -> Option<bool> {
     for i in 1..4u16 {
         if i == 4 {
             return Some(false);
@@ -31,11 +33,15 @@ pub async fn post_retry(card_body: serde_json::Value, url: String) -> Option<boo
                     } else if m.status().as_u16() == 200u16 {
                         return Some(true);
                     } else {
-                        log::info!(
-                            "Failed to post to teams, got status code {}",
-                            m.status().as_u16()
-                        );
-                        log::info!("Message from Teams endpoint: {:#?}", m);
+                        let whole_body = match hyper::body::to_bytes(m.into_body()).await.ok() {
+                            Some(body) => body,
+                            None => Bytes::from("Could not unpack body"),
+                        };
+                        let whole_body_vec = whole_body.iter().cloned().collect::<Vec<u8>>();
+                        let value = from_utf8(&whole_body_vec)
+                            .to_owned()
+                            .expect("Could not convert bytes");
+                        log::info!("Failed to post teams, got error: \"{}\"", value);
                         return None;
                     }
                 }
