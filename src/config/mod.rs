@@ -1,10 +1,10 @@
 use http::request::Parts;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::fs::File;
 use std::fmt;
+use std::fs::File;
 use std::io::prelude::*;
 use std::sync::{Arc, Mutex};
-use serde::{Serialize, Deserialize};
 
 pub type ConfigHash = Arc<Mutex<HashMap<String, ConfigEntry>>>;
 
@@ -13,7 +13,7 @@ pub struct ConfigEntry {
     pub url: Url,
 
     #[serde(default)]
-    pub kind: String
+    pub kind: String,
 }
 
 #[derive(Hash, Eq, PartialEq, Serialize, Deserialize, Debug, Clone)]
@@ -30,7 +30,6 @@ impl fmt::Display for Url {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
     }
-
 }
 
 pub fn parse(file: &str) -> Result<ConfigHash, serde_yaml::Error> {
@@ -71,9 +70,7 @@ pub fn match_channel(req: &Parts, config: ConfigHash) -> Option<String> {
         Some(channel) => {
             let config = config.lock().expect("Unable to unlock config HashMap");
             match config.get(&channel) {
-                Some(entry) => {
-                    Some(entry.url.to_string())
-                },
+                Some(entry) => Some(entry.url.to_string()),
                 None => {
                     log::error!("Channel not found: {}", &req.uri);
                     None
