@@ -1,1 +1,2 @@
-endpointone: "https://outlook.office.com/webhook/"
+endpointone: 
+  url: "https://outlook.office.com/webhook/"

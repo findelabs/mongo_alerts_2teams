@@ -1,10 +1,37 @@
 use http::request::Parts;
 use std::collections::HashMap;
 use std::fs::File;
+use std::fmt;
 use std::io::prelude::*;
 use std::sync::{Arc, Mutex};
+use serde::{Serialize, Deserialize};
 
-use crate::ConfigHash;
+pub type ConfigHash = Arc<Mutex<HashMap<String, ConfigEntry>>>;
+
+#[derive(Hash, Eq, PartialEq, Serialize, Deserialize, Debug, Clone)]
+pub struct ConfigEntry {
+    pub url: Url,
+
+    #[serde(default)]
+    pub kind: String
+}
+
+#[derive(Hash, Eq, PartialEq, Serialize, Deserialize, Debug, Clone)]
+pub struct Url(String);
+
+impl Default for Url {
+    fn default() -> Self {
+        Url("".to_string())
+    }
+}
+
+// Add ability to use to_string() with Url
+impl fmt::Display for Url {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({})", self)
+    }
+
+}
 
 pub fn parse(file: &str) -> Result<ConfigHash, serde_yaml::Error> {
     let mut file = File::open(file).expect("Unable to open config");
@@ -13,7 +40,7 @@ pub fn parse(file: &str) -> Result<ConfigHash, serde_yaml::Error> {
     file.read_to_string(&mut contents)
         .expect("Unable to read config");
 
-    let deck: HashMap<String, String> = serde_yaml::from_str(&contents)?;
+    let deck: HashMap<String, ConfigEntry> = serde_yaml::from_str(&contents)?;
 
     Ok(Arc::new(Mutex::new(deck)))
 }
@@ -44,7 +71,7 @@ pub fn match_channel(req: &Parts, config: ConfigHash) -> Option<String> {
         Some(channel) => {
             let config = config.lock().expect("Unable to unlock config HashMap");
             match config.get(&channel) {
-                Some(url) => Some(url.to_string()),
+                Some(entry) => Some(entry.url.to_string()),
                 None => {
                     log::error!("Channel not found: {}", &req.uri);
                     None
