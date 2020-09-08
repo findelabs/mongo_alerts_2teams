@@ -1,5 +1,5 @@
 use chrono::Local;
-use clap::Clap;
+use clap::{crate_version, App, Arg};
 use env_logger::Builder;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Request, Server};
@@ -11,18 +11,33 @@ mod post;
 mod server;
 mod transform;
 
-#[derive(Clap, Clone)]
-#[clap(version = "0.1", author = "Verticaleap <dan@findelabs.com>")]
-struct Opts {
-    #[clap(short, long)]
-    config: String,
-    #[clap(short, long, default_value = "8000")]
-    port: u16,
-}
-
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let opts: Opts = Opts::parse();
+    let opts = App::new("mongo_alerts_2teams")
+        .version(crate_version!())
+        .author("Daniel F. <dan@findelabs.com>")
+        .about(
+            "Simple rust webserver to forward Mongo Atlas Ops Manager alerts to a Microsoft Teams",
+        )
+        .arg(
+            Arg::with_name("config")
+                .short("c")
+                .long("config")
+                .required(true)
+                .value_name("FILE")
+                .help("Config file")
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("port")
+                .short("p")
+                .long("port")
+                .help("Set port to listen on")
+                .required(false)
+                .default_value("8000")
+                .takes_value(true),
+        )
+        .get_matches();
 
     // Initialize log Builder
     Builder::new()
@@ -39,9 +54,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .init();
 
     // Read in config file
-    let config = config::parse(&opts.config)?;
+    let config = config::parse(&opts.value_of("config").unwrap())?;
+    let port: u16 = opts.value_of("port").unwrap().parse().unwrap_or_else(|_| {
+        eprintln!("specified port isn't in a valid range, setting to 8080");
+        8080
+    });
 
-    let addr = ([0, 0, 0, 0], opts.port).into();
+    let addr = ([0, 0, 0, 0], port).into();
 
     let service = make_service_fn(move |_| {
         let config = config.clone();
@@ -54,7 +73,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     let server = Server::bind(&addr).serve(service);
 
-    println!("Listening on http://{}", addr);
+    println!(
+        "Starting mongo_alerts_2teams:{} on http://{}",
+        crate_version!(),
+        addr
+    );
 
     if let Err(e) = server.await {
         eprintln!("server error: {}", e);
