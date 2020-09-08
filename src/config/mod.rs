@@ -21,14 +21,14 @@ pub struct Url(String);
 
 impl Default for Url {
     fn default() -> Self {
-        Url("".to_string())
+        Url("string".to_string())
     }
 }
 
 // Add ability to use to_string() with Url
 impl fmt::Display for Url {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "({})", self)
+        write!(f, "{}", self.0)
     }
 
 }
@@ -71,7 +71,9 @@ pub fn match_channel(req: &Parts, config: ConfigHash) -> Option<String> {
         Some(channel) => {
             let config = config.lock().expect("Unable to unlock config HashMap");
             match config.get(&channel) {
-                Some(entry) => Some(entry.url.to_string()),
+                Some(entry) => {
+                    Some(entry.url.to_string())
+                },
                 None => {
                     log::error!("Channel not found: {}", &req.uri);
                     None
