@@ -1,6 +1,6 @@
 use chrono::Local;
 use clap::{crate_version, App, Arg};
-use env_logger::Builder;
+use env_logger::{Builder, Target};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Request, Server};
 use log::LevelFilter;
@@ -50,7 +50,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                 record.args()
             )
         })
-        .filter(None, LevelFilter::Info)
+        .target(Target::Stdout)
+        .filter_level(LevelFilter::Error)
+        .parse_default_env()
         .init();
 
     // Read in config file

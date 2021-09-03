@@ -66,7 +66,7 @@ pub fn create_card(
         }
     };
 
-    // Set title based on eventTypeName
+    // Set title and summary based on eventTypeName
     if alert_json["eventTypeName"].is_string() {
         match get_message_string(
             &alert_json["eventTypeName"]
@@ -78,9 +78,17 @@ pub fn create_card(
                 let summary = format!("[{}]: {}", card_body["title"], string);
                 card_body["summary"] = serde_json::to_value(summary)?;
             }
-            None => card_body["sections"][0]["activityTitle"] = alert_json["eventTypeName"].clone(),
+            None => {
+                card_body["sections"][0]["activityTitle"] = alert_json["eventTypeName"].clone();
+                let summary = format!("[{}]: {}", card_body["title"], "Unknown event type".to_string());
+                card_body["summary"] = serde_json::to_value(summary)?;
+            }
         }
-    };
+    } else {
+        // Every event should have an eventTypeName, but return a error in the response if an event does not
+        card_body["sections"][0]["activityTitle"] = serde_json::to_value("Missing eventTypeName".to_string())?;
+        card_body["summary"] = serde_json::to_value("Error, unknown eventTypeName".to_string())?;
+    }
 
     let mut facts_vec: Vec<FactEntry> = Vec::new();
 
@@ -161,6 +169,7 @@ pub fn get_message_string(alert_type: &str) -> Option<&str> {
         "BACKUP_AGENT_UP" => Some("Backup is up"),
         "BACKUP_AGENT_VERSION_BEHIND" => Some("Backup does not have the latest version"),
         "BACKUP_AGENT_VERSION_CURRENT" => Some("Backup has the latest version"),
+        "BLOCKSTORE_JOB_TOO_MANY_RETRIES" => Some("Blockstore jobs have reached a high number of retries"),
         "MONITORING_AGENT_DOWN" => Some("Monitoring is down"),
         "MONITORING_AGENT_UP" => Some("Monitoring is up"),
         "MONITORING_AGENT_VERSION_BEHIND" => Some("Monitoring does not have the latest version"),
