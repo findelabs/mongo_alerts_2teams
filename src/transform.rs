@@ -69,7 +69,7 @@ pub fn create_card(
     // Set title and summary based on eventTypeName
     if alert_json["eventTypeName"].is_string() {
         match get_message_string(
-            &alert_json["eventTypeName"]
+            alert_json["eventTypeName"]
                 .as_str()
                 .expect("Logically, we should not have hit this error"),
         ) {
@@ -80,13 +80,14 @@ pub fn create_card(
             }
             None => {
                 card_body["sections"][0]["activityTitle"] = alert_json["eventTypeName"].clone();
-                let summary = format!("[{}]: {}", card_body["title"], "Unknown event type".to_string());
+                let summary = format!("[{}]: {}", card_body["title"], "Unknown event type");
                 card_body["summary"] = serde_json::to_value(summary)?;
             }
         }
     } else {
         // Every event should have an eventTypeName, but return a error in the response if an event does not
-        card_body["sections"][0]["activityTitle"] = serde_json::to_value("Missing eventTypeName".to_string())?;
+        card_body["sections"][0]["activityTitle"] =
+            serde_json::to_value("Missing eventTypeName".to_string())?;
         card_body["summary"] = serde_json::to_value("Error, unknown eventTypeName".to_string())?;
     }
 

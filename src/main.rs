@@ -56,7 +56,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         .init();
 
     // Read in config file
-    let config = config::parse(&opts.value_of("config").unwrap())?;
+    let config = config::parse(opts.value_of("config").unwrap())?;
     let port: u16 = opts.value_of("port").unwrap().parse().unwrap_or_else(|_| {
         eprintln!("specified port isn't in a valid range, setting to 8080");
         8080

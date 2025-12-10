@@ -53,20 +53,17 @@ fn params(req: &Parts) -> Option<HashMap<String, String>> {
                 .into_owned()
                 .collect()
         })
-        .unwrap_or_else(HashMap::new);
+        .unwrap_or_default();
     Some(params)
 }
 
 pub fn channel(req: &Parts) -> Option<String> {
-    let params = params(&req).unwrap_or_else(HashMap::new);
-    match params.get("channel") {
-        Some(channel) => Some(channel.to_string()),
-        None => None,
-    }
+    let params = params(req).unwrap_or_default();
+    params.get("channel").map(|channel| channel.to_string())
 }
 
 pub fn match_channel(req: &Parts, config: ConfigHash) -> Option<String> {
-    match channel(&req) {
+    match channel(req) {
         Some(channel) => {
             let config = config.lock().expect("Unable to unlock config HashMap");
             match config.get(&channel) {
